@@ -1,0 +1,47 @@
+# Systèmes
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node / Next.js / npm
+node_modules/
+.next/
+dist/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Hugo
+public/
+resources/_gen/
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vs/
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*.lock
+
+# OS
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Images ou assets générés automatiquement (optionnel)
+*.png
+*.jpg
+*.gif
+*.ico
+
+# Secrets ou configs locaux
+.env
