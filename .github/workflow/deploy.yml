@@ -1,0 +1,37 @@
+name: 🚀 Build & Deploy GameDevHub
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧰 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: 🏗️ Build site
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          # optionnel : garder l’historique des pages
+          force_orphan: true
