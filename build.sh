@@ -20,8 +20,17 @@ mkdir -p "$BUILD_DIR/contributions"
 # home.html devient index.html pour l'accueil
 cp "home.html" "$BUILD_DIR/index.html"
 
-# Copie des autres pages statiques
-cp "article.html" "experience.html" "ressources.html" "communauté.html" "$BUILD_DIR/" 2>/dev/null || true
+# Copie des autres pages statiques (sans accent)
+cp "article.html" "experience.html" "ressources.html" "$BUILD_DIR/" 2>/dev/null || true
+
+# Gestion spéciale de la page Communauté
+if [ -f "communaute.html" ]; then
+  cp "communaute.html" "$BUILD_DIR/"
+elif [ -f "communauté.html" ]; then
+  # Fallback si le fichier original avec accent existe encore
+  cp "communauté.html" "$BUILD_DIR/communaute.html"
+  echo "⚠️  Attention : le fichier 'communauté.html' a été copié sous 'communaute.html' (sans accent)."
+fi
 
 # Copie du CSS
 cp "$CSS_FILE" "$BUILD_DIR/"
@@ -41,8 +50,7 @@ if [ -d "contributions" ]; then
     base="$(basename "$f" .md)"
     out="$BUILD_DIR/contributions/${base}.html"
 
-    # Pandoc produit un HTML complet (-s) avec un <head> propre
-    # --css ../style.css car la page générée est dans /contributions/
+    # Conversion Markdown → HTML via Pandoc
     pandoc \
       --from=gfm \
       --to=html5 \
@@ -78,7 +86,7 @@ cat > "$INDEX_CONTRIB" <<'HTML'
         <a href="article.html">Articles</a>
         <a href="experience.html">Expériences</a>
         <a href="ressources.html">Ressources</a>
-        <a href="communauté.html">Communauté</a>
+        <a href="communaute.html">Communauté</a>
       </nav>
     </header>
 
@@ -97,7 +105,6 @@ if compgen -G "$BUILD_DIR/contributions/*.html" > /dev/null; then
   for html in "$BUILD_DIR"/contributions/*.html; do
     name="$(basename "$html")"
     title="${name%.html}"
-    # Affichage plus joli (remplacer - par espace)
     title_pretty="${title//-/ }"
     echo "        <li><a href=\"contributions/$name\">$title_pretty</a></li>" >> "$INDEX_CONTRIB"
   done
